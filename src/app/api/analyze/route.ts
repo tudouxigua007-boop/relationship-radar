@@ -9,24 +9,23 @@ const MAX_IMAGE_BYTES = 5 * 1024 * 1024
 const fallback: AnalyzeResponse = {
   score: 0,
   risk_level: 'low',
-  summary: '暂时无法完成自动分析。请结合具体上下文判断，也可以稍后重试。',
   flags: [],
   behavior_profile: [],
-  responses: {
-    gentle: '我想先确认彼此的感受和边界，再继续讨论。',
-    firm: '我需要你尊重我已经表达的意愿。',
-    exit: '我现在先结束这次对话，等安全、平静时再处理。',
+  behavior_summary: '暂时无法完成自动分析，请稍后重试。',
+  response: {
+    direction: '可以继续沟通',
+    text: '我想先确认彼此的感受和边界，再继续讨论。',
   },
 }
 
 function isAnalyzeResponse(value: unknown): value is AnalyzeResponse {
   if (!value || typeof value !== 'object') return false
   const data = value as Record<string, unknown>
-  const responses = data.responses as Record<string, unknown> | undefined
+  const response = data.response as Record<string, unknown> | undefined
   return Number.isInteger(data.score) && ['high', 'medium', 'low'].includes(String(data.risk_level))
-    && typeof data.summary === 'string' && Array.isArray(data.flags)
-    && Array.isArray(data.behavior_profile) && !!responses
-    && ['gentle', 'firm', 'exit'].every(key => typeof responses[key] === 'string')
+    && Array.isArray(data.flags) && Array.isArray(data.behavior_profile)
+    && typeof data.behavior_summary === 'string'
+    && !!response && typeof response.direction === 'string' && typeof response.text === 'string'
 }
 
 export async function POST(request: Request) {

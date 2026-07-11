@@ -9,7 +9,6 @@ export interface Flag {
   quote: string
   pattern: string
   explanation: string
-  suggestion: string
 }
 
 export interface BehaviorProfile {
@@ -20,13 +19,12 @@ export interface BehaviorProfile {
 export interface AnalyzeResponse {
   score: number
   risk_level: 'high' | 'medium' | 'low'
-  summary: string
   flags: Flag[]
   behavior_profile: BehaviorProfile[]
-  responses: {
-    gentle: string
-    firm: string
-    exit: string
+  behavior_summary: string
+  response: {
+    direction: string
+    text: string
   }
 }
 
