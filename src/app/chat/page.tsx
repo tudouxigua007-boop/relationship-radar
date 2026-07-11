@@ -9,8 +9,6 @@ interface DisplayMessage {
   analysis?: ChatResponse
 }
 
-const PRESET_CHIP = '💡 帮我模拟 ta 可能的回复'
-
 export default function ChatPage() {
   const [messages, setMessages] = useState<DisplayMessage[]>([])
   const [input, setInput] = useState('')
@@ -40,115 +38,97 @@ export default function ChatPage() {
         }),
       })
       const data: ChatResponse = await res.json()
+      const aiContent = [
+        data.pattern && data.pattern !== '暂不确定' ? `这是"${data.pattern}"——` : '',
+        data.analysis,
+        data.suggestion ? `\n\n你可以这样接："${data.suggestion}"` : '',
+        data.encouragement ? `\n\n${data.encouragement}` : '',
+      ].filter(Boolean).join('')
 
-      const aiMsg: DisplayMessage = {
-        role: 'assistant',
-        content: data.suggestion,
-        analysis: data,
-      }
-      setMessages(prev => [...prev, aiMsg])
+      setMessages(prev => [...prev, { role: 'assistant', content: aiContent, analysis: data }])
     } catch {
-      setMessages(prev => [...prev, {
-        role: 'assistant',
-        content: '连接失败，请重试',
-      }])
+      setMessages(prev => [...prev, { role: 'assistant', content: '连接失败，请重试' }])
     }
     setLoading(false)
   }
 
   return (
-    <div className="flex flex-col h-[calc(100vh-5rem)]">
-      {/* 返回 */}
-      <div className="flex items-center justify-between mb-3">
-        <a href="/" className="text-sm text-gray-400 hover:text-gray-600">← 返回</a>
-        <span className="text-sm font-medium">💬 对话</span>
-      </div>
+    <div className="flex flex-col h-screen">
+      {/* Nav */}
+      <nav className="sticky top-0 z-50 bg-[var(--bg)] border-b border-[var(--hairline-soft)] h-14 flex items-center px-5 shrink-0">
+        <div className="max-w-[420px] mx-auto w-full flex items-center justify-between">
+          <a href="/" className="text-[13px] font-medium text-[var(--stone)] no-underline flex items-center gap-1 hover:text-[var(--fg)] transition-colors">
+            ← 返回
+          </a>
+          <span className="text-sm font-bold text-[var(--fg)]">对话</span>
+          <div className="w-12" />
+        </div>
+      </nav>
 
-      {/* 上下文卡片 */}
-      <div className="bg-pink-50 rounded-xl px-4 py-3 mb-4 text-xs text-pink-600 border border-pink-100">
-        📊 基于你的聊天分析，我会帮你识别对方每句话的套路，并给出应对建议。
-      </div>
+      <div className="max-w-[420px] mx-auto w-full flex-1 flex flex-col overflow-hidden">
+        {/* Context */}
+        <div className="mx-5 mt-3 mb-0 px-3.5 py-2.5 bg-[var(--surface)] rounded-[10px] text-xs text-[var(--steel)] leading-relaxed shrink-0">
+          基于你的聊天分析，我会帮你识别对方每句话的套路，并给出应对建议。
+        </div>
 
-      {/* 消息列表 */}
-      <div className="flex-1 overflow-y-auto space-y-4 pb-4">
-        {/* 初始引导 */}
-        {messages.length === 0 && (
-          <div className="bg-white rounded-2xl px-4 py-3 text-sm text-gray-600 border border-gray-100">
-            把 ta 的新回复发给我，我帮你分析套路、给应对建议。
-            也可以点下面的按钮，让我模拟 ta 可能的回复。
-          </div>
-        )}
+        {/* Messages */}
+        <div className="flex-1 overflow-y-auto px-5 py-4 flex flex-col gap-4">
+          {messages.length === 0 && (
+            <div className="self-start max-w-[85%]">
+              <div className="bg-[var(--bg)] border border-[var(--hairline)] rounded-xl px-4 py-3 text-sm leading-relaxed text-[var(--charcoal)]">
+                把 ta 的新回复发给我，我帮你分析套路、给应对建议。也可以点下面的按钮，让我模拟 ta 可能的回复。
+              </div>
+            </div>
+          )}
 
-        {messages.map((msg, i) => (
-          <div key={i}>
-            {msg.role === 'user' ? (
-              <div className="flex justify-end">
-                <div className="max-w-[80%] bg-[var(--primary)] text-white rounded-2xl px-4 py-3 text-sm">
+          {messages.map((msg, i) => (
+            <div key={i}>
+              {msg.role === 'user' ? (
+                <div className="self-end max-w-[85%] ml-auto bg-[var(--fg)] text-[var(--bg)] rounded-xl px-4 py-3 text-sm leading-relaxed" style={{ borderBottomRightRadius: '4px' }}>
                   {msg.content}
                 </div>
-              </div>
-            ) : (
-              <div className="space-y-2">
-                {/* 套路识别标签 */}
-                {msg.analysis?.pattern && (
-                  <span className="inline-block px-2 py-0.5 text-xs rounded-full bg-pink-100 text-pink-600">
-                    📍 {msg.analysis.pattern}
-                  </span>
-                )}
-                {/* 分析 */}
-                {msg.analysis?.analysis && (
-                  <div className="bg-gray-50 rounded-2xl px-4 py-3 text-sm text-gray-700 border border-gray-100">
-                    {msg.analysis.analysis}
+              ) : (
+                <div className="self-start max-w-[85%]">
+                  <div className="bg-[var(--bg)] border border-[var(--hairline)] rounded-xl px-4 py-3 text-sm leading-relaxed text-[var(--charcoal)] whitespace-pre-line" style={{ borderBottomLeftRadius: '4px' }}>
+                    {msg.content}
                   </div>
-                )}
-                {/* 建议回应 */}
-                <div className="bg-white rounded-2xl px-4 py-3 text-sm text-gray-800 border border-gray-100">
-                  💡 {msg.content}
                 </div>
-                {/* 鼓励 */}
-                {msg.analysis?.encouragement && (
-                  <div className="bg-green-50 rounded-xl px-3 py-2 text-xs text-green-600">
-                    ⭐ {msg.analysis.encouragement}
-                  </div>
-                )}
+              )}
+            </div>
+          ))}
+
+          {loading && (
+            <div className="self-start max-w-[85%]">
+              <div className="bg-[var(--bg)] border border-[var(--hairline)] rounded-xl px-4 py-3 text-sm text-[var(--muted)]" style={{ borderBottomLeftRadius: '4px' }}>
+                正在分析...
               </div>
-            )}
-          </div>
-        ))}
+            </div>
+          )}
+          <div ref={bottomRef} />
+        </div>
 
-        {loading && (
-          <div className="bg-gray-50 rounded-2xl px-4 py-3 text-sm text-gray-400 border border-gray-100">
-            正在分析...
-          </div>
-        )}
-        <div ref={bottomRef} />
-      </div>
-
-      {/* 预设 chip + 输入框 */}
-      <div className="border-t border-gray-100 pt-3 space-y-2">
-        <button
-          onClick={() => sendMessage(PRESET_CHIP)}
-          disabled={loading}
-          className="px-3 py-1.5 bg-pink-50 text-pink-500 rounded-full text-xs border border-pink-100 hover:bg-pink-100 transition disabled:opacity-50"
-        >
-          {PRESET_CHIP}
-        </button>
-        <div className="flex gap-2">
-          <input
-            type="text"
-            value={input}
-            onChange={(e) => setInput(e.target.value)}
-            onKeyDown={(e) => e.key === 'Enter' && sendMessage(input)}
-            placeholder="粘贴 ta 的回复..."
-            className="flex-1 px-4 py-3 rounded-xl border border-pink-200 focus:outline-none focus:ring-2 focus:ring-[var(--primary-light)] text-sm"
-          />
+        {/* Input Area */}
+        <div className="shrink-0 px-5 pt-2 pb-4">
           <button
-            onClick={() => sendMessage(input)}
-            disabled={loading || !input.trim()}
-            className="px-5 py-3 rounded-xl bg-[var(--primary)] text-white font-semibold disabled:opacity-50 text-sm"
+            onClick={() => sendMessage('帮我模拟 ta 可能的回复')}
+            disabled={loading}
+            className="inline-flex items-center gap-1.5 px-3.5 py-[7px] border border-[var(--hairline)] rounded-[10px] text-xs font-medium text-[var(--steel)] cursor-pointer mb-2.5 hover:border-[var(--fg)] hover:text-[var(--fg)] transition-all disabled:opacity-50"
           >
-            ➤
+            帮我模拟 ta 可能的回复
           </button>
+          <div className="flex gap-2">
+            <button className="w-9 h-9 border border-[var(--hairline)] rounded-[10px] bg-[var(--bg)] text-[var(--stone)] flex items-center justify-center cursor-pointer shrink-0 hover:border-[var(--fg)] hover:text-[var(--fg)] transition-all text-lg">
+              +
+            </button>
+            <input
+              type="text"
+              value={input}
+              onChange={(e) => setInput(e.target.value)}
+              onKeyDown={(e) => e.key === 'Enter' && sendMessage(input)}
+              placeholder="粘贴 ta 的回复..."
+              className="flex-1 px-3 py-2 border border-[var(--hairline)] rounded-[10px] text-sm text-[var(--fg)] outline-none focus:border-[var(--fg)] transition-colors h-9 placeholder:text-[var(--muted)] font-[inherit]"
+            />
+          </div>
         </div>
       </div>
     </div>
