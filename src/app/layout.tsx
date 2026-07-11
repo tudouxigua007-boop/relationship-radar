@@ -2,7 +2,7 @@ import './globals.css'
 import type { Metadata } from 'next'
 
 export const metadata: Metadata = {
-  title: '关系雷达 | Relationship Radar',
+  title: '不舒服雷达探测器',
   description: '识别不健康的关系模式，守护你的边界',
 }
 

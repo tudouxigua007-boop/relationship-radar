@@ -50,6 +50,7 @@ export default function HomePage() {
   }
 
   const handleScan = async () => {
+    if (!canSubmit) return
     setLoading(true)
     setReport(null)
     try {
@@ -78,7 +79,7 @@ export default function HomePage() {
       {/* Nav */}
       <nav className="sticky top-0 z-50 bg-[var(--bg)] border-b border-[var(--hairline-soft)] h-14 flex items-center px-5">
         <div className="max-w-[420px] mx-auto w-full flex items-center justify-between">
-          <a href="/" className="text-base font-bold text-[var(--fg)] no-underline tracking-tight">关系雷达</a>
+          <a href="/" className="text-base font-bold text-[var(--fg)] no-underline tracking-tight">不舒服雷达探测器</a>
           <a href="/history" className="text-xs font-medium text-[var(--stone)] border border-[var(--hairline)] rounded-[10px] px-3.5 py-1.5 flex items-center gap-1.5 hover:border-[var(--fg)] hover:text-[var(--fg)] transition-all no-underline">
             历史
           </a>
@@ -147,9 +148,10 @@ export default function HomePage() {
 
         <button
           onClick={handleScan}
-          disabled={loading || !canSubmit}
+          disabled={loading}
           className="flex items-center justify-center gap-2 w-full py-3.5 mt-4 rounded-[10px] bg-[var(--fg)] text-[var(--bg)] text-[15px] font-semibold cursor-pointer hover:bg-[var(--charcoal)] active:scale-[0.98] transition-all min-h-[48px] disabled:opacity-50 disabled:cursor-not-allowed"
         >
+          {loading && <span className="inline-block w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />}
           {loading ? '正在扫描...' : '开始扫描'}
         </button>
 
