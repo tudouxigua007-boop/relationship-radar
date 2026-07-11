@@ -18,6 +18,17 @@ npm run dev
 cp .env.example .env.local
 ```
 
+豆包（火山方舟）配置：
+
+```env
+DOUBAO_API_KEY=
+DOUBAO_BASE_URL=https://ark.cn-beijing.volces.com/api/v3
+DOUBAO_TEXT_MODEL=
+DOUBAO_VISION_MODEL=
+```
+
+真实密钥只保存在 `.env.local` 或部署平台的环境变量中，不要提交到 GitHub。
+
 ## 项目结构
 
 ```
@@ -53,3 +64,5 @@ src/
 - 不替用户决定是否结束关系
 - 涉及威胁/暴力/跟踪时优先提示现实安全
 - 不提交真实聊天记录、`.env` 或 API Key
+
+文字输入使用文本模型，聊天截图使用支持图片输入的视觉模型。截图仅在本次请求中发送给模型，不写入数据库。
