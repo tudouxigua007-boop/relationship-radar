@@ -138,7 +138,9 @@ relationship-radar/
 
 ```
 DOUBAO_API_KEY=xxx
-DOUBAO_MODEL_ENDPOINT=xxx
+DOUBAO_BASE_URL=https://ark.cn-beijing.volces.com/api/v3
+DOUBAO_TEXT_MODEL=文本模型 ID 或推理接入点 ID
+DOUBAO_VISION_MODEL=视觉模型 ID 或推理接入点 ID
 ```
 
 ## 运行
