@@ -34,26 +34,26 @@ export default function HistoryPage() {
   }, [])
 
   return (
-    <div className="min-h-screen">
+    <div className="min-h-screen bg-[var(--bg)]">
       {/* Nav */}
-      <nav className="sticky top-0 z-50 bg-[var(--bg)] border-b border-[var(--hairline-soft)] h-14 flex items-center px-5">
-        <div className="max-w-[420px] mx-auto w-full flex items-center justify-between">
-          <a href="/" className="text-[13px] font-medium text-[var(--stone)] no-underline flex items-center gap-1 hover:text-[var(--fg)] transition-colors">
+      <nav className="sticky top-0 z-50 bg-white h-[72px] flex items-center px-5 shadow-[0_1px_3px_rgba(0,0,0,0.10),0_2px_2px_rgba(0,0,0,0.06)]">
+        <div className="w-[min(92vw,960px)] mx-auto flex items-center justify-between">
+          <a href="/" className="text-[13px] font-semibold text-[var(--starbucks-green)] no-underline flex items-center gap-1 hover:text-[var(--accent-green)]">
             ← 返回
           </a>
-          <span className="text-sm font-bold text-[var(--fg)]">历史</span>
+          <span className="text-base font-bold text-[var(--starbucks-green)]">分析记录</span>
           <div className="w-12" />
         </div>
       </nav>
 
-      <main className="max-w-[420px] mx-auto px-5 pt-6 pb-16">
+      <main className="w-[min(92vw,960px)] mx-auto pt-[clamp(28px,4vw,44px)] pb-20">
         {sessions.length === 0 ? (
           <div className="text-center py-20 text-[var(--stone)]">
             <div className="text-[var(--muted)] mb-3 text-2xl">📋</div>
             <p className="text-sm">还没有分析记录</p>
           </div>
         ) : (
-          <div className="flex flex-col gap-2.5">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-3 sm:gap-4">
             {sessions.map((s) => {
               const risk = s.report ? riskBadge[s.report.risk_level] : null
               const chatRounds = Math.floor(s.chat.filter(m => m.role === 'user').length)
@@ -65,7 +65,7 @@ export default function HistoryPage() {
                 <a
                   key={s.id}
                   href={`/chat?session=${s.id}`}
-                  className="block no-underline text-inherit bg-[var(--bg)] border border-[var(--hairline)] rounded-xl px-[18px] py-4 hover:-translate-y-px hover:shadow-md active:scale-[0.99] transition-all"
+                  className="brand-card block no-underline text-inherit px-[18px] py-4 hover:-translate-y-px hover:shadow-md"
                 >
                   <div className="flex items-center justify-between mb-2">
                     <div className="flex items-center gap-2">

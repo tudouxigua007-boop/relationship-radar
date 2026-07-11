@@ -76,33 +76,75 @@ export default function HomePage() {
   return (
     <>
       {/* Nav */}
-      <nav className="sticky top-0 z-50 bg-[var(--bg)] border-b border-[var(--hairline-soft)] h-14 flex items-center px-5">
-        <div className="max-w-[420px] mx-auto w-full flex items-center justify-between">
-          <a href="/" className="text-base font-bold text-[var(--fg)] no-underline tracking-tight">关系雷达</a>
-          <a href="/history" className="text-xs font-medium text-[var(--stone)] border border-[var(--hairline)] rounded-[10px] px-3.5 py-1.5 flex items-center gap-1.5 hover:border-[var(--fg)] hover:text-[var(--fg)] transition-all no-underline">
+      <nav className="sticky top-0 z-50 bg-white h-[72px] flex items-center px-5 shadow-[0_1px_3px_rgba(0,0,0,0.10),0_2px_2px_rgba(0,0,0,0.06),0_0_2px_rgba(0,0,0,0.07)]">
+        <div className="page-shell flex items-center justify-between">
+          <a href="/" className="text-lg font-bold text-[var(--starbucks-green)] no-underline tracking-tight">不舒服探测器</a>
+          <a href="/history" className="text-[13px] font-semibold text-[var(--starbucks-green)] border border-[var(--starbucks-green)] rounded-full px-4 py-2 flex items-center gap-1.5 hover:bg-[var(--green-soft)] no-underline">
             历史
           </a>
         </div>
       </nav>
 
-      <main className="max-w-[420px] mx-auto px-5 pt-10 pb-16">
+      {loading && (
+        <div className="fixed inset-0 z-[100] bg-[var(--bg)] overflow-y-auto" role="status" aria-live="polite" aria-label="正在分析对话">
+          <div className="min-h-full page-shell flex items-center justify-center py-10">
+            <div className="w-full max-w-[720px]">
+              <div className="bg-[var(--house-green)] text-white rounded-xl px-[clamp(28px,6vw,56px)] py-[clamp(36px,7vw,64px)] shadow-[0_8px_20px_rgba(0,0,0,0.14)]">
+                <div className="radar-loader mb-8" aria-hidden="true">
+                  <span className="radar-loader-core" />
+                  <span className="radar-loader-ring radar-loader-ring-one" />
+                  <span className="radar-loader-ring radar-loader-ring-two" />
+                </div>
+                <p className="text-[11px] font-semibold tracking-[0.15em] uppercase text-white/60 mb-3">Discomfort Detector</p>
+                <h2 className="font-['Lora',Georgia,serif] text-[clamp(28px,4vw,44px)] font-semibold leading-tight mb-3">
+                  正在听懂这段对话
+                </h2>
+                <p className="text-sm sm:text-base text-white/70 leading-relaxed max-w-[38em]">
+                  我们会关注具体表达与边界，不给任何人贴标签，也不替你做决定。
+                </p>
+              </div>
+
+              <div className="brand-card -mt-3 mx-[clamp(12px,4vw,32px)] p-5 sm:p-6 relative">
+                <div className="loading-step loading-step-one">
+                  <span className="loading-step-dot" />
+                  <div><strong>读取对话</strong><p>辨认清晰可见的文字和说话顺序</p></div>
+                </div>
+                <div className="loading-step loading-step-two">
+                  <span className="loading-step-dot" />
+                  <div><strong>识别模式</strong><p>区分普通分歧、边界信号与上下文不足</p></div>
+                </div>
+                <div className="loading-step loading-step-three">
+                  <span className="loading-step-dot" />
+                  <div><strong>整理回应</strong><p>生成清楚、尊重且可执行的表达建议</p></div>
+                </div>
+                <p className="mt-5 pt-4 border-t border-[var(--hairline-soft)] text-xs text-[var(--stone)] text-center">
+                  截图和文字仅用于本次分析，请稍候
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      <main className="page-shell pt-[clamp(20px,3vw,40px)] pb-20">
         {/* Hero */}
-        <div className="mb-8">
-          <h1 className="text-[28px] font-bold tracking-tight leading-[1.15] mb-2">
+        <div className="fluid-hero mb-[clamp(24px,3vw,36px)] bg-[var(--house-green)] text-white rounded-xl shadow-[0_8px_12px_rgba(0,0,0,0.10)]">
+          <p className="text-[11px] font-semibold tracking-[0.15em] uppercase text-white/70 mb-3">Discomfort Detector</p>
+          <h1 className="font-['Lora',Georgia,serif] text-[clamp(30px,4.2vw,52px)] font-semibold tracking-tight leading-[1.2] mb-3 max-w-[18em]">
             那些被浪漫化的话，<br />藏着什么信号？
           </h1>
-          <p className="text-[15px] text-[var(--steel)] leading-relaxed">
+          <p className="text-[clamp(15px,1.6vw,19px)] text-white/70 leading-relaxed max-w-[42em]">
             上传聊天截图或粘贴文字，帮你识别不健康的关系模式。
           </p>
         </div>
 
         {/* Input Card */}
-        <div className="border border-[var(--hairline)] rounded-xl overflow-hidden">
+        <div className="brand-card overflow-hidden reading-shell">
           <div className="flex p-1.5 gap-1">
             <button
               onClick={() => setTab('image')}
               className={`flex-1 py-2.5 rounded-lg text-[13px] font-medium transition-all flex items-center justify-center gap-1.5 ${
-                tab === 'image' ? 'bg-[var(--surface)] text-[var(--fg)] font-semibold' : 'text-[var(--stone)]'
+                tab === 'image' ? 'bg-[var(--green-soft)] text-[var(--starbucks-green)] font-semibold' : 'text-[var(--stone)]'
               }`}
             >
               上传截图
@@ -110,7 +152,7 @@ export default function HomePage() {
             <button
               onClick={() => setTab('text')}
               className={`flex-1 py-2.5 rounded-lg text-[13px] font-medium transition-all flex items-center justify-center gap-1.5 ${
-                tab === 'text' ? 'bg-[var(--surface)] text-[var(--fg)] font-semibold' : 'text-[var(--stone)]'
+                tab === 'text' ? 'bg-[var(--green-soft)] text-[var(--starbucks-green)] font-semibold' : 'text-[var(--stone)]'
               }`}
             >
               粘贴文字
@@ -119,7 +161,7 @@ export default function HomePage() {
 
           {tab === 'image' && (
             <div className="px-4 pb-4">
-              <label className="flex flex-col items-center justify-center py-9 px-5 cursor-pointer border-2 border-dashed border-[var(--hairline)] rounded-[10px] hover:border-[var(--coral)] hover:bg-[var(--coral-soft)] transition-all text-center">
+              <label className="flex flex-col items-center justify-center py-9 px-5 cursor-pointer border border-dashed border-[var(--hairline)] rounded-xl hover:border-[var(--accent-green)] hover:bg-[var(--green-soft)] text-center">
                 {imagePreview ? (
                   <img src={imagePreview} alt="preview" className="max-h-48 rounded-lg" />
                 ) : (
@@ -138,7 +180,7 @@ export default function HomePage() {
               <textarea
                 value={text}
                 onChange={(e) => setText(e.target.value)}
-                className="w-full h-[120px] p-3.5 border-2 border-dashed border-[var(--hairline)] rounded-[10px] text-sm leading-relaxed text-[var(--fg)] resize-none outline-none focus:border-[var(--fg)] focus:border-solid transition-colors placeholder:text-[var(--muted)] font-[inherit]"
+                className="w-full h-[120px] p-4 border border-[var(--hairline)] rounded-xl bg-[#f9f9f9] text-sm leading-relaxed text-[var(--fg)] resize-none outline-none focus:border-[var(--accent-green)] focus:ring-2 focus:ring-[var(--green-soft)] placeholder:text-[var(--muted)] font-[inherit]"
                 placeholder={'把聊天记录粘贴到这里...\n\n比如："我都是为你好，你怎么就不理解呢"'}
               />
             </div>
@@ -148,20 +190,20 @@ export default function HomePage() {
         <button
           onClick={handleScan}
           disabled={loading || !canSubmit}
-          className="flex items-center justify-center gap-2 w-full py-3.5 mt-4 rounded-[10px] bg-[var(--fg)] text-[var(--bg)] text-[15px] font-semibold cursor-pointer hover:bg-[var(--charcoal)] active:scale-[0.98] transition-all min-h-[48px] disabled:opacity-50 disabled:cursor-not-allowed"
+          className="reading-shell flex items-center justify-center gap-2 py-3.5 mt-4 rounded-full bg-[var(--accent-green)] text-white text-[15px] font-semibold cursor-pointer hover:bg-[var(--starbucks-green)] min-h-[50px] shadow-sm disabled:opacity-50 disabled:cursor-not-allowed"
         >
-          {loading ? '正在扫描...' : '开始扫描'}
+          开始扫描
         </button>
 
         {!report && (
-          <div className="mt-6">
+          <div className="mt-6 reading-shell">
             <p className="text-[11px] font-semibold text-[var(--stone)] mb-2.5 uppercase tracking-wider">试试看</p>
             <div className="flex gap-2 flex-wrap">
               {SAMPLE_CASES.map((c) => (
                 <button
                   key={c}
                   onClick={() => { setTab('text'); setText(c) }}
-                  className="px-4 py-2 border border-[var(--hairline)] rounded-[10px] text-[13px] text-[var(--steel)] cursor-pointer hover:border-[var(--fg)] hover:text-[var(--fg)] hover:-translate-y-px transition-all"
+                  className="px-4 py-2 border border-[var(--accent-green)] rounded-full bg-transparent text-[13px] font-medium text-[var(--accent-green)] cursor-pointer hover:bg-[var(--green-soft)]"
                 >
                   {c}
                 </button>
@@ -171,9 +213,9 @@ export default function HomePage() {
         )}
 
         {report && (
-          <div className="mt-9 pt-9 border-t border-[var(--hairline)]">
+          <div className="mt-[var(--section-gap)] pt-[var(--section-gap)] border-t border-[var(--hairline)]">
             {/* Score */}
-            <div className="border border-[var(--hairline)] rounded-xl p-5 mb-8 flex items-center gap-5">
+            <div className="brand-card p-5 sm:p-6 mb-8 flex flex-col sm:flex-row sm:items-center gap-4 sm:gap-6 max-w-3xl mx-auto">
               <div className="shrink-0">
                 <span className="text-5xl font-bold leading-none tracking-tight">{report.score}</span>
                 <span className="text-base font-normal text-[var(--stone)]">/100</span>
@@ -183,7 +225,7 @@ export default function HomePage() {
                   {riskLabel[report.risk_level]}
                 </div>
                 <div className="w-full h-1 bg-[var(--hairline)] rounded-sm overflow-hidden mb-2.5">
-                  <div className="h-full bg-[var(--fg)] rounded-sm transition-all duration-500" style={{ width: `${report.score}%` }} />
+                  <div className="h-full bg-[var(--accent-green)] rounded-sm transition-all duration-500" style={{ width: `${report.score}%` }} />
                 </div>
                 <p className="text-[13px] text-[var(--stone)]">
                   检测到 <strong className="text-[var(--charcoal)] font-semibold">{report.flags.length}</strong> 个信号 · <strong className="text-[var(--charcoal)] font-semibold">{report.behavior_profile.length}</strong> 种行为模式
@@ -193,9 +235,9 @@ export default function HomePage() {
 
             {/* Signals */}
             <h3 className="text-xl font-bold tracking-tight mb-4">信号标注</h3>
-            <div className="flex flex-col gap-3 mb-8">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-3 mb-8">
               {report.flags.map((flag, i) => (
-                <div key={i} className="border border-[var(--hairline)] rounded-xl px-[18px] py-4 hover:-translate-y-0.5 hover:shadow-md transition-all">
+                <div key={i} className="brand-card px-[18px] py-4 hover:-translate-y-0.5 hover:shadow-md">
                   <p className="text-[15px] font-semibold leading-relaxed mb-2.5">"{flag.quote}"</p>
                   <div className="flex gap-1.5 flex-wrap mb-2.5">
                     <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-md text-xs font-semibold bg-[var(--red-soft)] text-[var(--red)]">
@@ -209,7 +251,7 @@ export default function HomePage() {
 
             {/* Profile */}
             <h3 className="text-xl font-bold tracking-tight mb-4">行为模式画像</h3>
-            <div className="border border-[var(--hairline)] rounded-xl p-5 mb-8">
+            <div className="brand-card p-5 sm:p-6 mb-8 max-w-4xl">
               {report.behavior_profile.map((bp, i) => (
                 <div key={i} className="flex items-center gap-3 mb-2.5 last:mb-0">
                   <span className="w-[52px] text-[13px] font-semibold text-[var(--charcoal)] text-right shrink-0">{bp.type}</span>
@@ -226,7 +268,7 @@ export default function HomePage() {
 
             {/* Response */}
             <h3 className="text-xl font-bold tracking-tight mb-4">建议回应</h3>
-            <div className="border border-[var(--hairline)] rounded-xl px-5 py-[18px] mb-8">
+            <div className="brand-card px-5 sm:px-6 py-[18px] mb-8 max-w-4xl">
               <div className={`inline-flex items-center gap-1.5 text-[13px] font-semibold px-3 py-1.5 rounded-lg mb-3 ${directionClass[report.response.direction] || 'text-[var(--orange)] bg-[var(--orange-soft)]'}`}>
                 {report.response.direction}
               </div>
@@ -237,7 +279,7 @@ export default function HomePage() {
             {/* Bottom CTA */}
             <a
               href="/chat"
-              className="flex items-center justify-center gap-2 w-full py-4 rounded-[10px] bg-[var(--coral)] text-white text-[15px] font-semibold cursor-pointer hover:bg-[#e04a2a] active:scale-[0.98] transition-all min-h-[52px] no-underline"
+              className="flex items-center justify-center gap-2 w-full sm:w-auto sm:min-w-[360px] sm:px-10 py-4 rounded-full bg-[var(--house-green)] text-white text-[15px] font-semibold cursor-pointer hover:bg-[var(--uplift-green)] min-h-[52px] no-underline shadow-md"
             >
               ta 不会就此罢休？继续聊，我帮你接招
             </a>
