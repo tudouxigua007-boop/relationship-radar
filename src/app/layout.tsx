@@ -10,17 +10,17 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html lang="zh-CN">
       <body className="min-h-screen bg-[var(--bg)]">
-        <nav className="sticky top-0 z-50 bg-white/80 backdrop-blur-sm border-b border-pink-100 px-4 py-3">
+        <nav className="sticky top-0 z-50 border-b border-gray-200 bg-white/95 px-5 py-4 backdrop-blur-sm">
           <div className="max-w-lg mx-auto flex items-center justify-between">
-            <a href="/" className="text-lg font-bold text-[var(--primary)]">
-              📡 关系雷达
+            <a href="/" className="text-xl font-bold tracking-tight text-neutral-950">
+              关系雷达
             </a>
-            <button className="text-gray-400 hover:text-gray-600 text-sm">
-              🕐
+            <button className="rounded-lg border border-gray-200 px-3 py-2 text-sm text-gray-400 hover:text-gray-700">
+              ◷ 历史
             </button>
           </div>
         </nav>
-        <main className="max-w-lg mx-auto px-4 py-6">
+        <main className="max-w-lg mx-auto px-5 py-7">
           {children}
         </main>
       </body>
