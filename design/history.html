@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>关系雷达 - 历史</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+    :root {
+      --bg: #ffffff;
+      --fg: #0a0a0a;
+      --surface: #f7f8fa;
+      --hairline: #e5e7eb;
+      --hairline-soft: #eaecf0;
+      --charcoal: #222222;
+      --steel: #5f5f5f;
+      --stone: #8e8e93;
+      --muted: #a8aab2;
+      --coral: #ff5530;
+      --coral-soft: rgba(255, 85, 48, 0.10);
+      --orange: #E17055;
+      --orange-soft: rgba(225, 112, 85, 0.10);
+      --green: #00B894;
+      --green-soft: rgba(0, 184, 148, 0.10);
+      --red: #D63031;
+      --red-soft: rgba(214, 48, 49, 0.10);
+    }
+
+    body {
+      font-family: 'DM Sans', -apple-system, 'Helvetica Neue', sans-serif;
+      background: var(--bg);
+      color: var(--fg);
+      -webkit-font-smoothing: antialiased;
+      font-size: 14px;
+      line-height: 1.5;
+    }
+
+    /* === Nav === */
+    .nav {
+      position: sticky; top: 0; z-index: 50;
+      background: var(--bg);
+      border-bottom: 1px solid var(--hairline-soft);
+      height: 56px; display: flex; align-items: center; padding: 0 20px;
+    }
+    .nav-inner {
+      max-width: 420px; margin: 0 auto; width: 100%;
+      display: flex; align-items: center; justify-content: space-between;
+    }
+    .nav-back {
+      font-size: 13px; font-weight: 500; color: var(--stone);
+      text-decoration: none; display: flex; align-items: center; gap: 4px;
+      transition: color 150ms;
+    }
+    .nav-back:hover { color: var(--fg); }
+    .nav-title { font-size: 14px; font-weight: 700; color: var(--fg); }
+    .nav-spacer { width: 48px; }
+
+    /* === Main === */
+    .main { max-width: 420px; margin: 0 auto; padding: 24px 20px 64px; }
+
+    /* === Empty === */
+    .empty {
+      display: none;
+      text-align: center;
+      padding: 80px 20px;
+      color: var(--stone);
+    }
+    .empty-icon { margin-bottom: 12px; color: var(--muted); }
+    .empty p { font-size: 14px; }
+
+    /* === Session List === */
+    .session-list { display: flex; flex-direction: column; gap: 10px; }
+
+    .session-card {
+      display: block;
+      text-decoration: none;
+      color: inherit;
+      background: var(--bg);
+      border: 1px solid var(--hairline);
+      border-radius: 12px;
+      padding: 16px 18px;
+      transition: all 200ms;
+    }
+    .session-card:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 4px 16px -4px rgba(0,0,0,0.06);
+    }
+    .session-card:active { transform: scale(0.99); }
+
+    .session-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 8px;
+    }
+    .session-meta {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .session-date {
+      font-size: 12px;
+      color: var(--stone);
+    }
+    .session-risk {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      font-size: 11px;
+      font-weight: 600;
+      padding: 2px 8px;
+      border-radius: 5px;
+    }
+    .session-risk.high { color: var(--red); background: var(--red-soft); }
+    .session-risk.medium { color: var(--orange); background: var(--orange-soft); }
+    .session-risk.low { color: var(--green); background: var(--green-soft); }
+
+    .session-score {
+      font-size: 20px;
+      font-weight: 700;
+      letter-spacing: -1px;
+      color: var(--fg);
+    }
+    .session-score span {
+      font-size: 12px;
+      font-weight: 400;
+      color: var(--stone);
+    }
+
+    .session-text {
+      font-size: 14px;
+      color: var(--steel);
+      line-height: 1.5;
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+      margin-bottom: 10px;
+    }
+
+    .session-footer {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .session-signals {
+      display: flex;
+      gap: 4px;
+      flex-wrap: wrap;
+      flex: 1;
+    }
+    .session-signal {
+      font-size: 11px;
+      font-weight: 500;
+      color: var(--stone);
+      background: var(--surface);
+      padding: 2px 8px;
+      border-radius: 5px;
+    }
+    .session-chat-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      font-size: 11px;
+      color: var(--stone);
+      flex-shrink: 0;
+      margin-left: 8px;
+    }
+  </style>
+</head>
+<body>
+
+  <nav class="nav">
+    <div class="nav-inner">
+      <a href="index.html" class="nav-back">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m15 18-6-6 6-6"/></svg>
+        返回
+      </a>
+      <span class="nav-title">历史</span>
+      <div class="nav-spacer"></div>
+    </div>
+  </nav>
+
+  <main class="main">
+
+    <div class="session-list">
+
+      <a href="chat.html" class="session-card">
+        <div class="session-header">
+          <div class="session-meta">
+            <span class="session-date">今天 14:32</span>
+            <span class="session-risk medium">需要注意</span>
+          </div>
+          <div class="session-score">72<span>/100</span></div>
+        </div>
+        <p class="session-text">"你不回消息是不是不爱我了""我翻你手机是因为太在乎你""你朋友不适合你，我才最懂你"</p>
+        <div class="session-footer">
+          <div class="session-signals">
+            <span class="session-signal">情感勒索</span>
+            <span class="session-signal">边界侵犯</span>
+            <span class="session-signal">孤立支持系统</span>
+          </div>
+          <span class="session-chat-badge">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+            4 轮对话
+          </span>
+        </div>
+      </a>
+
+      <a href="chat.html" class="session-card">
+        <div class="session-header">
+          <div class="session-meta">
+            <span class="session-date">昨天 21:08</span>
+            <span class="session-risk high">高风险</span>
+          </div>
+          <div class="session-score">85<span>/100</span></div>
+        </div>
+        <p class="session-text">"你去哪了？为什么不接电话？""你再这样我就不活了""都是因为你我才这样"</p>
+        <div class="session-footer">
+          <div class="session-signals">
+            <span class="session-signal">控制与监视</span>
+            <span class="session-signal">情感勒索</span>
+            <span class="session-signal">责任转移</span>
+          </div>
+          <span class="session-chat-badge">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+            2 轮对话
+          </span>
+        </div>
+      </a>
+
+      <a href="chat.html" class="session-card">
+        <div class="session-header">
+          <div class="session-meta">
+            <span class="session-date">7月8日 18:45</span>
+            <span class="session-risk low">暂无明显风险</span>
+          </div>
+          <div class="session-score">18<span>/100</span></div>
+        </div>
+        <p class="session-text">"我觉得我们最近沟通有点少，你最近是不是比较忙？"</p>
+        <div class="session-footer">
+          <div class="session-signals">
+            <span class="session-signal">正常沟通</span>
+          </div>
+        </div>
+      </a>
+
+    </div>
+
+  </main>
+
+</body>
+</html>

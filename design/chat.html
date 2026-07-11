@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>关系雷达 - 对话</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+    :root {
+      --bg: #ffffff;
+      --fg: #0a0a0a;
+      --surface: #f7f8fa;
+      --hairline: #e5e7eb;
+      --hairline-soft: #eaecf0;
+      --charcoal: #222222;
+      --steel: #5f5f5f;
+      --stone: #8e8e93;
+      --muted: #a8aab2;
+      --coral: #ff5530;
+      --coral-soft: rgba(255, 85, 48, 0.10);
+      --orange: #E17055;
+      --orange-soft: rgba(225, 112, 85, 0.10);
+      --green: #00B894;
+      --green-soft: rgba(0, 184, 148, 0.10);
+      --red: #D63031;
+      --red-soft: rgba(214, 48, 49, 0.10);
+    }
+
+    html, body { height: 100%; }
+    body {
+      font-family: 'DM Sans', -apple-system, 'Helvetica Neue', sans-serif;
+      background: var(--bg);
+      color: var(--fg);
+      -webkit-font-smoothing: antialiased;
+      font-size: 14px;
+      line-height: 1.5;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* === Nav === */
+    .nav {
+      position: sticky; top: 0; z-index: 50;
+      background: var(--bg);
+      border-bottom: 1px solid var(--hairline-soft);
+      height: 56px; display: flex; align-items: center; padding: 0 20px;
+      flex-shrink: 0;
+    }
+    .nav-inner {
+      max-width: 420px; margin: 0 auto; width: 100%;
+      display: flex; align-items: center; justify-content: space-between;
+    }
+    .nav-back {
+      font-size: 13px; font-weight: 500; color: var(--stone);
+      text-decoration: none; display: flex; align-items: center; gap: 4px;
+      transition: color 150ms;
+    }
+    .nav-back:hover { color: var(--fg); }
+    .nav-title { font-size: 14px; font-weight: 700; color: var(--fg); }
+    .nav-spacer { width: 48px; }
+
+    /* === Main === */
+    .chat-main {
+      max-width: 420px; margin: 0 auto; width: 100%;
+      flex: 1; display: flex; flex-direction: column;
+      overflow: hidden;
+    }
+
+    /* === Context === */
+    .context-card {
+      margin: 12px 20px;
+      padding: 10px 14px;
+      background: var(--surface);
+      border-radius: 10px;
+      font-size: 12px;
+      color: var(--steel);
+      line-height: 1.5;
+      flex-shrink: 0;
+    }
+    .context-card strong { color: var(--charcoal); font-weight: 600; }
+
+    /* === Messages === */
+    .messages {
+      flex: 1;
+      overflow-y: auto;
+      padding: 8px 20px 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    /* User bubble */
+    .msg-user {
+      align-self: flex-end;
+      max-width: 85%;
+      background: var(--fg);
+      color: var(--bg);
+      border-radius: 12px 12px 4px 12px;
+      padding: 12px 16px;
+      font-size: 14px;
+      line-height: 1.6;
+    }
+
+    /* AI bubble */
+    .msg-ai {
+      align-self: flex-start;
+      max-width: 85%;
+    }
+    .msg-ai-text {
+      background: var(--bg);
+      border: 1px solid var(--hairline);
+      border-radius: 12px 12px 12px 4px;
+      padding: 12px 16px;
+      font-size: 14px;
+      line-height: 1.6;
+      color: var(--charcoal);
+    }
+
+
+    /* === Input Area === */
+    .input-area {
+      flex-shrink: 0;
+      padding: 8px 20px 16px;
+      background: var(--bg);
+      max-width: 420px; margin: 0 auto; width: 100%;
+    }
+    .simulate-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 7px 14px;
+      border: 1px solid var(--hairline);
+      border-radius: 10px;
+      background: var(--bg);
+      font-family: inherit;
+      font-size: 12px;
+      font-weight: 500;
+      color: var(--steel);
+      cursor: pointer;
+      margin-bottom: 10px;
+      transition: all 150ms;
+    }
+    .simulate-btn:hover { border-color: var(--fg); color: var(--fg); }
+    .input-row {
+      display: flex;
+      gap: 8px;
+    }
+    .input-row input {
+      flex: 1;
+      padding: 8px 12px;
+      border: 1px solid var(--hairline);
+      border-radius: 10px;
+      background: var(--bg);
+      font-family: inherit;
+      font-size: 14px;
+      color: var(--fg);
+      outline: none;
+      transition: border-color 150ms;
+      height: 36px;
+    }
+    .input-row input::placeholder { color: var(--muted); }
+    .input-row input:focus { border-color: var(--fg); }
+    .add-btn {
+      width: 36px; height: 36px;
+      border: 1px solid var(--hairline);
+      border-radius: 10px;
+      background: var(--bg);
+      color: var(--stone);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: all 150ms;
+      flex-shrink: 0;
+    }
+    .add-btn:hover { border-color: var(--fg); color: var(--fg); }
+  </style>
+</head>
+<body>
+
+  <nav class="nav">
+    <div class="nav-inner">
+      <a href="index.html" class="nav-back">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m15 18-6-6 6-6"/></svg>
+        返回
+      </a>
+      <span class="nav-title">对话</span>
+      <div class="nav-spacer"></div>
+    </div>
+  </nav>
+
+  <div class="chat-main">
+
+    <div class="context-card">
+      基于你的聊天分析：检测到 <strong>控制与监视</strong>、<strong>情绪施压</strong> 信号，风险等级 <strong>medium</strong>。
+    </div>
+
+    <div class="messages">
+
+      <!-- AI 欢迎 -->
+      <div class="msg-ai">
+        <div class="msg-ai-text">
+          把 ta 的新回复发给我，我帮你分析套路、给应对建议。也可以点下面的按钮，让我模拟 ta 可能的回复。
+        </div>
+      </div>
+
+      <!-- 用户消息 1 -->
+      <div class="msg-user">
+        我跟 ta 说了"翻手机不是关心，是不信任"，ta 回我："你看你又这样，我关心你你还嫌我管太多，那我以后什么都不管了行了吧？"
+      </div>
+
+      <!-- AI 分析 1 -->
+      <div class="msg-ai">
+        <div class="msg-ai-text">
+          这是"反向内疚操控"——把自己变成受害者，让你怀疑"是不是我太过分了"。你在谈边界，ta 在谈情绪，经典的偷换议题。"以后什么都不管了"是威胁性让步，目的是让你心软退回去。
+
+你可以这样接："我说的是翻手机这个行为，不是否定你这个人。我们可以聊怎么建立信任，但这个边界我不让步。"
+
+你没有被带偏去自证清白，而是把话题拉回来了，做得好。
+        </div>
+      </div>
+
+      <!-- 用户消息 2 -->
+      <div class="msg-user">
+        ta 又说"你是不是外面有人了才这么心虚"
+      </div>
+
+      <!-- AI 分析 2 -->
+      <div class="msg-ai">
+        <div class="msg-ai-text">
+          这是"责任转移 + 无端指控"——你在谈翻手机的事，ta 突然指控你出轨，逼你自证清白，原来的问题就被绕过去了。严重程度升级了。
+
+你可以这样接："我们现在聊的是翻手机这件事，请不要转移话题。如果你对我有不信任，我们可以单独聊，但不是用来回避刚才的问题。"
+        </div>
+      </div>
+
+    </div>
+
+    <div class="input-area">
+      <button class="simulate-btn">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+        帮我模拟 ta 可能的回复
+      </button>
+      <div class="input-row">
+        <button class="add-btn">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+        </button>
+        <input type="text" placeholder="粘贴 ta 的回复..." />
+      </div>
+    </div>
+
+  </div>
+
+</body>
+</html>
